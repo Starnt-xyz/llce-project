@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psychological Thrillers - Choose Your Path</title>
+    
+    <!-- Tailwind CSS for rapid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Playfair Display for elegant headings, Lora for readable serif body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            900: '#0a0a0a',
+                            800: '#141414',
+                            accent: '#6b1c1c', // Deep blood red for subtle highlights
+                            accentHover: '#8a2525'
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['"Playfair Display"', 'serif'],
+                        body: ['"Lora"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #000;
+            color: #d4d4d4;
+        }
+
+        #bg-layer {
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        /* Smooth fade transitions for scene changes */
+        .fade-container {
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        /* Button styling for elegant interaction */
+        .choice-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .choice-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(107, 28, 28, 0.1), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .choice-btn:hover::before {
+            left: 100%;
+        }
+        
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="font-body min-h-screen flex flex-col items-center justify-center p-4 md:p-8 antialiased selection:bg-brand-accent selection:text-white">
+
+    <!-- Background Image Layer -->
+    <div id="bg-layer" class="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-100 transition-opacity duration-700 ease-in-out">
+        <div class="absolute inset-0 bg-black/70 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main id="app-container" class="relative z-10 w-full max-w-3xl fade-container glass-panel rounded-lg p-6 md:p-12 shadow-2xl">
+        <!-- Content will be injected here by JavaScript -->
+    </main>
+
+    <script>
+        // --- STORY DATA ---
+        const defaultMenuBg = 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1920';
+
+        const stories = {
+            story1: {
+                title: "THE FACE YOU WEAR",
+                scenes: {
+                    1: {
+                        bg: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=1920",
+                        text: "New York, 11:47 p.m. Rain crawled down the windows of the Mercer Foundation. In thirteen minutes, Elias Mercer would receive the City's Integrity Award. Newspapers called him generous, brilliant and incorruptible. His smile had opened doors that money could not. Three years earlier, his company had concealed a report proving that the fire doors in one of its apartment buildings were defective. A fire had killed a caretaker, Daniel Reed. An innocent engineer had been blamed. Elias had signed the order to bury the report. Now, on the eve of his greatest public triumph, a note waited on his desk: \"I KNOW WHAT YOU DID. MIDNIGHT. - M.\" Elias looked at the three objects around him. A portrait covered by black velvet stood behind a locked door. A small silver bottle lay beside the mirror. On his telephone, an unread message from a journalist flashed: \"Will you comment before we publish?\" \"Who am I?\" he whispered. \"The man the city admires, or the man who signed that report?\"",
+                        choices: [
+                            { text: "Uncover the portrait and confront your reflection", target: 2 },
+                            { text: "Examine the mysterious silver bottle", target: 3 },
+                            { text: "Answer the journalist and protect your reputation", target: 4 }
+                        ]
+                    },
+                    2: {
+                        bg: "https://images.unsplash.com/photo-1578301978018-3005759f48f7?q=80&w=1920",
+                        text: "The painting had been commissioned when Elias was twenty-five. It had once shown a confident young man, untouched by fear. Tonight its eyes were sunken, its mouth twisted into a hypocritical smile, and dark stains spread over its hands. Elias touched his own cheek. His skin was flawless. The city would see the same respectable face tomorrow. Only this hidden canvas displayed the truth. Could one good deed erase three years of lies? If he donated another million dollars, would the stains disappear? He remembered the dead caretaker's daughter holding a photograph of her father. The painted hands grew darker. For the first time, Elias understood that the portrait was not his enemy. It was his conscience.",
+                        choices: [
+                            { text: "Take a photograph of the portrait and prepare to tell the truth", target: 5 },
+                            { text: "Pull the painting from its frame and try to destroy the evidence", target: 6 }
+                        ]
+                    },
+                    3: {
+                        bg: "https://images.unsplash.com/photo-1584345630045-31298816b35d?q=80&w=1920",
+                        text: "The inscription on the bottle read: \"SEPARATION - one dose.\" His late father, a chemist, had once promised him a cure for guilt: a substance that would divide the respectable self from the self capable of cruelty. A letter warned: \"You may silence your conscience, but you cannot undo your choices.\" In the mirror, Elias watched his face fracture into two reflections. One was a dignified businessman. The other grinned with the arrogance of someone who believed that rules applied only to other people. \"Let the other man carry the blame,\" a voice seemed to say. \"You can remain innocent.\"",
+                        choices: [
+                            { text: "Refuse the drug, smash the bottle, and face the consequences yourself", target: 5 },
+                            { text: "Drink it and let your darker self take control", target: 7 }
+                        ]
+                    },
+                    4: {
+                        bg: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1920",
+                        text: "Elias opened his phone and saw dozens of photographs from the gala: expensive suits, polished glasses, immaculate smiles. In this world, reputation was a currency, and he had become rich by spending everyone else's trust. The journalist, Mara Quinn, had attached a copy of the buried fire-safety report. She wanted an answer before publication. Elias began typing: \"I have always acted in the best interests of the community.\" He stopped. The sentence was technically elegant and morally empty. He looked at his reflection in the black phone screen. Was there anything beneath the expensive suit, the rehearsed smile and the carefully constructed image?",
+                        choices: [
+                            { text: "Arrange to meet Mara and give her the complete files", target: 5 },
+                            { text: "Threaten Mara with lawyers and order the remaining files destroyed", target: 6 }
+                        ]
+                    },
+                    5: {
+                        bg: "https://images.unsplash.com/photo-1475721028314-3d752bd9f8ee?q=80&w=1920",
+                        text: "The ballroom applauded as Elias approached the podium. On the screen behind him appeared the words \"A LIFE OF SERVICE.\" In his pocket was proof of the concealed report. His hands trembled. He could still choose the speech his staff had written: a speech about community, generosity and excellence. Nobody in the audience knew what he had done. But he knew. The harmed families knew. The engineer whose career had been destroyed knew. \"Ladies and gentlemen,\" he began. His voice almost failed. For the first time in years, he had no prepared words.",
+                        choices: [
+                            { text: "Admit the cover-up, give the evidence to investigators and accept the consequences", target: 8 },
+                            { text: "Deliver the award speech and keep your secret another night", target: 9 }
+                        ]
+                    },
+                    6: {
+                        bg: "https://images.unsplash.com/photo-1517594422361-5e1f10be32f1?q=80&w=1920",
+                        text: "Ash fell from the fireplace. Elias had burned the portrait or ordered the files deleted, believing the past could disappear with its evidence. His assistant knocked. \"The awards ceremony is starting.\" As Elias stood up, his phone vibrated. Mara had already received a second copy of the report. The innocent engineer had kept one too. Destroying evidence had changed nothing about the fire, its victims or his part in it. For one terrible instant, Elias wanted to blame everyone except himself.",
+                        choices: [
+                            { text: "Stop the destruction, preserve what remains and confess publicly", target: 8 },
+                            { text: "Deny everything, discredit the witnesses and continue the performance", target: 9 }
+                        ]
+                    },
+                    7: {
+                        bg: "https://images.unsplash.com/photo-1522218731110-85f0601f01c4?q=80&w=1920",
+                        text: "The liquid tasted metallic. Elias fell against the mirror. When he stood again, he felt lighter, almost joyful. The guilt had gone. \"You were weak,\" said the figure in the mirror. \"I am the version of you who does not apologise.\" His movements had become abrupt. His voice sounded cold. When his assistant mentioned Daniel Reed's family, he laughed. The darker self could act without hesitation, but the facts remained unchanged. The dead were still dead, and the lies were still his. Suddenly, Elias realised the most frightening truth: the monster had never come from the bottle. It had been waiting inside his decisions.",
+                        choices: [
+                            { text: "Call Mara, ask for help and confess before the transformation consumes him", target: 8 },
+                            { text: "Let the other self take over, believing it will free you from guilt", target: 10 }
+                        ]
+                    },
+                    8: {
+                        bg: "https://images.unsplash.com/photo-1507676184212-d0330a156f97?q=80&w=1920",
+                        text: "\"I signed the order,\" Elias told the silent ballroom. \"The report was real. The danger was real. I concealed it. Daniel Reed died, and another person was blamed for my decision.\" A few guests walked out. Others stared. The applause did not return. Investigators opened a case. Elias resigned. He faced legal consequences and public disgrace. No confession brought Daniel back, and no apology automatically earned forgiveness. Yet, by refusing to hide behind his title, Elias had taken the first meaningful step towards atonement. He could not escape responsibility. He could finally acknowledge it.",
+                        choices: [
+                            { text: "Read Conclusion", target: 11 }
+                        ]
+                    },
+                    9: {
+                        bg: "https://images.unsplash.com/photo-1521500227181-4b130e9270bb?q=80&w=1920",
+                        text: "\"Integrity,\" Elias declared, \"is the foundation of our success.\" The crowd rose to its feet. Cameras flashed. By morning, his photograph appeared on every front page, his hand raised around the shining award. Then Mara published the documents. The engineer spoke. Former employees came forward. The applause became accusations, and the image he had so carefully cultivated began to collapse. Even before the public learned the truth, Elias had already become a prisoner of his secret. Each knock at his door sounded like an investigation. Every smile concealed a fear. He had managed to separate his public image from his private conduct - for a while. He had not separated himself from the consequences.",
+                        choices: [
+                            { text: "Read Conclusion", target: 11 }
+                        ]
+                    },
+                    10: {
+                        bg: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=1920",
+                        text: "The figure in the mirror smiled, but Elias did not recognise the smile. He walked into the ballroom and accepted the award without feeling anything at all. As the guests congratulated him, he realised that his name, his face and his reputation no longer belonged to the person he remembered being. He had surrendered control to the self he invented to avoid guilt. The news of the cover-up broke the next day. He claimed that the man responsible was not really him. Nobody could undo the signed order, and nobody accepted that an altered personality erased the harm. He had escaped the feeling of guilt only by losing himself. The responsibility remained.",
+                        choices: [
+                            { text: "Read Conclusion", target: 11 }
+                        ]
+                    },
+                    11: {
+                        bg: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=1920",
+                        text: "Though your choices led down divergent paths, the moral and philosophical verdict remains identical: attempting to escape responsibility by separating a respectable public identity from harmful private behavior is a fatal illusion. Document A (Dorian Gray) examines the chasm between outward appearance and inner morality. Document B (Dr Jekyll and Mr Hyde) illustrates the duality of human nature and the fallacy of compartmentalization. Document C (American Psycho) highlights how a polished professional facade and elite social status can mask severe private deviance. Ultimately, these works challenge the reliability of social masks and expose the reality of accountability. True responsibility requires truth, accountability, and atonement. A mask is never an acquittal.",
+                        choices: [
+                            { text: "Back to Main Menu", target: "menu" }
+                        ]
+                    }
+                }
+            },
+            story2: {
+                title: "THE MASK OF MORALITY",
+                scenes: {
+                    1: {
+                        bg: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=1920",
+                        text: "London, 11:30 p.m. Soft jazz drifted through the chandeliered halls of the Vance Gallery. Flashbulbs popped as Julian Vance smiled for the cultural columns, praised for his flawless taste, unmatched generosity, and impeccable civic leadership. Four years earlier, Julian had secretly diverted a multi-million-pound heritage trust fund to cover his private gambling debts and lavish lifestyle, framing a loyal junior curator who was subsequently ruined and imprisoned. Julian had signed the authorization in the dead of night, believing his social stature made him untouchable. Now, on the eve of his knighthood nomination, an envelope rested on his private office desk: \"I KNOW WHAT YOU DID IN 2022. THE TRUTH COMES OUT AT MIDNIGHT. - M.\" Julian looked at three objects on his desk and around the room: A heavy velvet curtain concealing a tall, locked canvas; a crystal decanter filled with a strange, shimmering tincture gifted by an eccentric chemist relative; and his smartphone flashing with an urgent email from an investigative journalist demanding a comment before morning publication. \"Who am I?\" he whispered. \"The man society applauds, or the man who destroyed an innocent person's life?\"",
+                        choices: [
+                            { text: "Pull back the velvet curtain to confront the hidden portrait", target: 2 },
+                            { text: "Pour and examine the mysterious chemical tincture", target: 3 },
+                            { text: "Open your laptop and draft a calculated PR defense", target: 4 }
+                        ]
+                    },
+                    2: {
+                        bg: "https://images.unsplash.com/photo-1578301978018-3005759f48f7?q=80&w=1920",
+                        text: "The painting had been commissioned on Julian's thirtieth birthday. Once, it captured a vibrant, innocent young man. Tonight, its eyes were sunken, its mouth twisted into a cynical, sneering grin of hypocrisy, and dark, oily stains marred the canvas hands. Julian touched his own smooth, unblemished cheek. In the mirror, his reflection remained youthful and serene. Only this hidden artwork bore the physical scars of his moral decay. Could one charitable donation erase four years of theft? If he funded a new public library, would the painted stains vanish? He remembered the ruined curator staring blankly at courtroom walls, and the canvas seemed to pulse with fresh malice. For the first time, Julian realized the portrait was not a curse; it was his trapped conscience.",
+                        choices: [
+                            { text: "Photograph the canvas as proof and prepare to make a full public confession", target: 5 },
+                            { text: "Cut the canvas from its frame and burn it to permanently destroy the evidence", target: 6 }
+                        ]
+                    },
+                    3: {
+                        bg: "https://images.unsplash.com/photo-1584345630045-31298816b35d?q=80&w=1920",
+                        text: "The label on the crystal decanter bore a single warning: \"SEPARATION - One dose.\" His late uncle had once theorized that human nature was a composite of conflicting desires, and that science could chemically divorce the respectable gentleman from the ruthless hedonist. A note left beside it read: \"You may silence your guilt, but you cannot rewrite your history.\" In the study's polished mirror, Julian watched his features distort. For a terrifying second, his reflection split into two distinct entities: one a dignified, polished director; the other a cold, grinning stranger who viewed laws and human lives as mere inconveniences. \"Let the other self handle the fallout,\" a voice whispered in his mind. \"You can remain blameless.\"",
+                        choices: [
+                            { text: "Smash the decanter against the floor, refuse the chemical divide, and face the guilt yourself", target: 5 },
+                            { text: "Drink the tincture and surrender control to your uninhibited, darker self", target: 7 }
+                        ]
+                    },
+                    4: {
+                        bg: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1920",
+                        text: "Julian opened his laptop, greeted by digital folders of high-society galas, expensive tailoring, and curated smiles. In his world, reputation was currency, and he had amassed a fortune by exploiting public trust. The investigative journalist, Mara Vance (no relation, but equally relentless), had attached scanned copies of the forged bank transfers. She wanted a statement before dawn. Julian began typing: \"As a lifelong advocate for arts and community welfare, I categorically deny these baseless allegations...\" He stopped. The prose was sophisticated, legally sound, and utterly devoid of truth. He stared at his immaculate reflection in the dark computer screen. Beneath the bespoke suit, the rehearsed charm, and the glittering awards, was there anything real left at all?",
+                        choices: [
+                            { text: "Arrange an immediate meeting with Mara to hand over the complete financial records", target: 5 },
+                            { text: "Threaten Mara with defamation lawyers and order your assistants to scrub the digital archives", target: 6 }
+                        ]
+                    },
+                    5: {
+                        bg: "https://images.unsplash.com/photo-1475721028314-3d752bd9f8ee?q=80&w=1920",
+                        text: "The gallery board members applauded as Julian stepped up to the podium under a banner reading: EXCELLENCE AND INTEGRITY. In his breast pocket rested the unredacted bank records of the embezzlement. His hands trembled. He could still deliver the scripted speech on philanthropy and civic duty that his PR team had prepared. Nobody in the ballroom suspected a thing. Yet he knew. The wrongfully imprisoned curator knew. The public trust had been violated. \"Ladies and gentlemen,\" Julian began, his voice faltering. For the first time in his life, he pushed the prepared notes aside.",
+                        choices: [
+                            { text: "Confess to the embezzlement on stage, hand over the evidence, and accept legal accountability", target: 8 },
+                            { text: "Deliver the polished speech on integrity and maintain the illusion for one more night", target: 9 }
+                        ]
+                    },
+                    6: {
+                        bg: "https://images.unsplash.com/photo-1517594422361-5e1f10be32f1?q=80&w=1920",
+                        text: "Ashes drifted from the office fireplace. Julian had burned the canvas, deleted the server archives, and silenced dissent, believing that eradicating the physical evidence would erase the past. His assistant tapped on the glass door. \"The knighthood committee is ready for your address, sir.\" As Julian rose, his phone buzzed violently. Mara had already uploaded a mirrored copy of the financial files to a public whistleblowing portal. The ruined curator had kept hard copies in safekeeping. Destroying evidence had changed nothing about the crime, the victim, or Julian's culpability. For one dizzying moment, Julian sought anyone else to blame.",
+                        choices: [
+                            { text: "Halt the charade, walk away from the ceremony, and surrender to authorities", target: 8 },
+                            { text: "Deny the digital leak as a coordinated smear campaign and double down on the performance", target: 9 }
+                        ]
+                    },
+                    7: {
+                        bg: "https://images.unsplash.com/photo-1522218731110-85f0601f01c4?q=80&w=1920",
+                        text: "The liquid burned like fire. Julian collapsed against the mahogany desk, gasping. When he stood upright, his posture was rigid, his expression chillingly vacant. The crushing weight of guilt had vanished, replaced by an intoxicating sense of absolute freedom. \"You were always too sentimental,\" muttered the stranger looking out through Julian's eyes. \"I am the version of you who takes what he wants without apologies.\" His movements grew erratic and cold. When his assistant mentioned the ongoing scandal regarding the embezzled trust, the stranger merely laughed. The alter-ego acted without a conscience, but the historical facts remained unaltered: the money was stolen, the innocent man suffered, and the actions belonged to Julian. Suddenly, a terrifying realization struck through the chemical fog: the monster had never originated in a bottle. It had been forged through years of deliberate, calculated choices.",
+                        choices: [
+                            { text: "Fight for control, call Mara, and confess before the transformation becomes permanent", target: 8 },
+                            { text: "Yield entirely to the alter-ego, believing absolute detachment equals freedom", target: 10 }
+                        ]
+                    },
+                    8: {
+                        bg: "https://images.unsplash.com/photo-1507676184212-d0330a156f97?q=80&w=1920",
+                        text: "\"I diverted the trust funds,\" Julian told the silent, stunned ballroom. \"I forged the documents. An innocent man took my place in prison. Every word of the allegations is true.\" A collective gasp swept through the crowd. Flashbulbs flared not in celebration, but in shock. Legal investigations commenced swiftly. Julian resigned from his post, surrendered his honors, and faced criminal prosecution. No confession could instantly undo the years of suffering endured by the ruined curator, and no apology restored the broken trust. Yet, by stripping away his protective title and facing reality, Julian took the first genuine step toward moral redemption. He could no longer escape responsibility; instead, he finally owned it.",
+                        choices: [
+                            { text: "Read Conclusion", target: 11 }
+                        ]
+                    },
+                    9: {
+                        bg: "https://images.unsplash.com/photo-1521500227181-4b130e9270bb?q=80&w=1920",
+                        text: "\"True leadership,\" Julian declared into the microphone, \"requires unwavering commitment to our community.\" The crowd erupted into thunderous applause, cameras capturing his radiant smile. By sunrise, his photograph dominated national newspapers, celebrating his triumph. Then, Mara's portal published the unredacted files. Former colleagues stepped forward with corroborating testimonies. The standing ovations instantly transformed into public outrage, and his meticulously constructed empire collapsed overnight. Even before public exposure reached his doorstep, Julian had become a prisoner of his own paranoia. Every knock at his office door sounded like an arrest warrant; every smile hid consuming dread. He had successfully compartmentalized his public identity from his private conduct for years, but he could never escape the inescapable consequences.",
+                        choices: [
+                            { text: "Read Conclusion", target: 11 }
+                        ]
+                    },
+                    10: {
+                        bg: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=1920",
+                        text: "The stranger in the mirror smiled, but Julian's consciousness faded into a dark, distant observer. He walked into the gala banquet and accepted the philanthropic award with complete emotional numbness. As well-wishers congratulated him, he realized his name, face, and reputation no longer belonged to him. He had abdicated his humanity to an artificial persona created purely to evade guilt. When the financial scandal broke the following morning, the alter-ego smugly claimed that the corrupt man depicted in the files was merely a different entity. No one accepted the excuse. Altering one's personality or creating a split ego did not erase the harm inflicted upon the world. He had successfully silenced his guilt only by losing his soul, while his objective responsibility remained entirely intact.",
+                        choices: [
+                            { text: "Read Conclusion", target: 11 }
+                        ]
+                    },
+                    11: {
+                        bg: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=1920",
+                        text: "Though your choices led down divergent paths, the moral and philosophical verdict remains identical: attempting to escape responsibility by separating a respectable public identity from harmful private behavior is a fatal illusion. Document A (Dorian Gray) examines the chasm between outward appearance and inner morality. Document B (Dr Jekyll and Mr Hyde) illustrates the duality of human nature and the fallacy of compartmentalization. Document C (American Psycho) highlights how a polished professional facade and elite social status can mask severe private deviance. Ultimately, these works challenge the reliability of social masks and expose the reality of accountability. True responsibility requires truth, accountability, and atonement. A mask is never an acquittal.",
+                        choices: [
+                            { text: "Back to Main Menu", target: "menu" }
+                        ]
+                    }
+                }
+            }
+        };
+
+        // --- STATE MANAGEMENT ---
+        let currentStoryId = null;
+        let currentSceneId = null;
+        let sceneHistory = [];
+        const container = document.getElementById('app-container');
+        const bgLayer = document.getElementById('bg-layer');
+
+        // --- CORE FUNCTIONS ---
+        
+        // Handles UI transitions
+        function transitionTo(renderCallback) {
+            container.classList.add('fade-out');
+            bgLayer.classList.add('opacity-0'); // Fade out background too
+
+            setTimeout(() => {
+                renderCallback();
+                // Force reflow
+                void container.offsetWidth;
+                container.classList.remove('fade-out');
+                bgLayer.classList.remove('opacity-0');
+            }, 600); // Wait for CSS transition
+        }
+
+        // Initialize App to Main Menu
+        function initApp() {
+            currentStoryId = null;
+            currentSceneId = null;
+            sceneHistory = [];
+            bgLayer.style.backgroundImage = `url('${defaultMenuBg}')`;
+            renderMenu();
+        }
+
+        // Render the Main Menu
+        function renderMenu() {
+            container.innerHTML = `
+                <div class="text-center">
+                    <h1 class="font-heading text-4xl md:text-5xl font-bold mb-4 tracking-wide text-gray-100">
+                        Psychological Thrillers
+                    </h1>
+                    <p class="text-gray-400 italic mb-10 max-w-lg mx-auto">
+                        Two narratives of morality, consequence, and the masks we wear. Choose your path.
+                    </p>
+                    <div class="flex flex-col gap-6 max-w-md mx-auto">
+                        <button onclick="startStory('story1')" class="choice-btn group block w-full text-left bg-transparent border border-gray-700 hover:border-brand-accent p-6 rounded-md cursor-pointer">
+                            <span class="block font-heading text-2xl font-bold text-gray-200 group-hover:text-white transition-colors duration-300">
+                                ${stories.story1.title}
+                            </span>
+                            <span class="block mt-2 text-sm text-gray-400 font-body group-hover:text-gray-300 transition-colors duration-300">
+                                Uncover the truth behind a tragic fire and an integrity award.
+                            </span>
+                        </button>
+                        
+                        <button onclick="startStory('story2')" class="choice-btn group block w-full text-left bg-transparent border border-gray-700 hover:border-brand-accent p-6 rounded-md cursor-pointer">
+                            <span class="block font-heading text-2xl font-bold text-gray-200 group-hover:text-white transition-colors duration-300">
+                                ${stories.story2.title}
+                            </span>
+                            <span class="block mt-2 text-sm text-gray-400 font-body group-hover:text-gray-300 transition-colors duration-300">
+                                Face the consequences of a diverted trust fund before a knighthood nomination.
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Start a specific story
+        function startStory(storyId) {
+            transitionTo(() => {
+                currentStoryId = storyId;
+                currentSceneId = 1;
+                sceneHistory = [];
+                renderScene(1);
+            });
+        }
+
+        // Handle a choice selection
+        function handleChoice(target) {
+            transitionTo(() => {
+                if (target === 'menu') {
+                    initApp();
+                } else {
+                    if (currentSceneId) {
+                        sceneHistory.push(currentSceneId);
+                    }
+                    currentSceneId = target;
+                    renderScene(target);
+                }
+            });
+        }
+
+        // Go back to the previous scene
+        function goBack() {
+            if (sceneHistory.length > 0) {
+                transitionTo(() => {
+                    currentSceneId = sceneHistory.pop();
+                    renderScene(currentSceneId);
+                });
+            }
+        }
+
+        // Render a specific scene
+        function renderScene(sceneId) {
+            const story = stories[currentStoryId];
+            const scene = story.scenes[sceneId];
+            
+            if (scene.bg) {
+                bgLayer.style.backgroundImage = `url('${scene.bg}')`;
+            }
+            
+            // Format text to allow beautiful paragraph breaks if needed, though raw text is unformatted.
+            // Using a clean wrapper.
+            
+            let sceneTitle = "";
+            if (sceneId === 11) {
+                sceneTitle = "Conclusion";
+            } else if ([8, 9, 10].includes(sceneId)) {
+                let endingNum = sceneId === 8 ? "One" : (sceneId === 9 ? "Two" : "Three");
+                sceneTitle = `Ending ${endingNum}`;
+            } else {
+                sceneTitle = `Scene ${sceneId}`;
+            }
+
+            let html = `
+                <div class="flex justify-between items-center mb-6">
+                    ${sceneHistory.length > 0 ? `<button onclick="goBack()" class="text-brand-accent hover:text-white transition-colors text-sm font-semibold uppercase tracking-wider flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> Go Back</button>` : `<div></div>`}
+                    <button onclick="handleChoice('menu')" class="text-gray-400 hover:text-white transition-colors text-sm font-semibold uppercase tracking-wider flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg> Home</button>
+                </div>
+                <div class="mb-8 border-b border-gray-800 pb-4 flex justify-between items-end">
+                    <h2 class="font-heading text-xl md:text-2xl text-brand-accent font-semibold uppercase tracking-widest">
+                        ${story.title}
+                    </h2>
+                    <span class="text-sm text-gray-500 font-heading italic">
+                        ${sceneTitle}
+                    </span>
+                </div>
+                
+                <div class="prose prose-invert max-w-none mb-12">
+                    <p class="text-lg md:text-xl leading-relaxed text-gray-300">
+                        ${scene.text}
+                    </p>
+                </div>
+                
+                <div class="flex flex-col gap-4">
+            `;
+
+            scene.choices.forEach((choice, index) => {
+                html += `
+                    <button onclick="handleChoice(${typeof choice.target === 'string' ? `'${choice.target}'` : choice.target})" 
+                            class="choice-btn w-full text-left p-4 rounded-md border border-gray-800 bg-black/40 hover:bg-black/60 hover:border-brand-accent/70 flex items-center group focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all duration-300">
+                        <span class="text-brand-accent mr-4 opacity-50 group-hover:opacity-100 transition-opacity font-heading font-bold text-xl">
+                            ${String.fromCharCode(65 + index)}.
+                        </span>
+                        <span class="text-gray-300 group-hover:text-white transition-colors text-base md:text-lg font-medium">
+                            ${choice.text}
+                        </span>
+                    </button>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // Start app on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
+
+    </script>
+</body>
+</html>
